@@ -1,0 +1,28 @@
+{
+  "name": "electrocam",
+  "version": "1.0.0",
+  "description": "A minimal Electron application to test your webcam",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jserodio/electrocam.git"
+  },
+  "keywords": [
+    "Electron",
+    "electrocam",
+    "webcam",
+    "test"
+  ],
+  "author": "jserodio",
+  "license": "CC0-1.0",
+  "bugs": {
+    "url": "https://github.com/jserodio/electrocam/issues"
+  },
+  "homepage": "https://github.com/jserodio/electrocam",
+  "devDependencies": {
+    "electron-prebuilt": "^1.2.0"
+  }
+}
