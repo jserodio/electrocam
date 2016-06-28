@@ -4,12 +4,18 @@ body {
   color: #fff;
   background-color: #122836;
   text-align: center;
-  font-size: 40px;
+  font-size: 12px;
   -webkit-app-region: drag;
 }
-#close {
+#btnPosition {
   position: absolute;
   bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#file-saved {
+  position: absolute;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -30,11 +36,43 @@ button:hover { opacity: 1; }
 button:active { background-color:#e44d26; }
 
 </style>
-<img class="draggable" alt="your screenshot">
-<button id="close" onclick="javascript:window.close()">Close this Window</button>
+<span id="file-saved"></span>
+<img alt="your screenshot">
+<span id="btnPosition">
+  <button id="close" onclick="javascript:window.close()">Close this Window</button>
+  <button id="save">Save Screenshot</button>
+</span>
 <script>
     // Get saved data from localStorage
-    var data = localStorage.getItem('dataURI');
-    var img = document.querySelector('img');
+    const data = localStorage.getItem('dataURI');
+    const img = document.querySelector('img');
+    const ipc = require('electron').ipcRenderer;
+    const fs = require('fs');
+    const saveBtn = document.querySelector('#save');  
+    var imageBuffer = processBase64Image(data);
     img.src = data;
+    saveBtn.addEventListener('click', function (event) {
+      ipc.send('save-dialog');
+    });
+    ipc.on('saved-file', function (event, path) {
+      fs.writeFile(path, imageBuffer.data, function (error) {
+        if (error) return console.log(error)
+        if (!path) path = 'No path';
+        document.getElementById('file-saved').innerHTML = `Path selected: ${path}`;
+      })    
+    });
+
+    // return an object with the processed base64image
+    function processBase64Image(dataString) {
+          var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),response = {};
+
+          if (matches.length !== 3) {
+              return new Error('Invalid input string');
+          }
+
+          response.type = matches[1];
+          response.data = new Buffer(matches[2], 'base64');
+
+          return response;
+    }
 </script>
